@@ -13,7 +13,7 @@ app.post('/webhook', (req, res) => {
   const agent = new WebhookClient({ request: req, response: res });
 
   function envoyerMessageFollowup(agent) {
-    console.log('ENVOYERMESSAGE FOLLOWUP' :);
+    console.log('ENVOYERMESSAGE FOLLOWUP :');
     console.log(req.body);
     agent.add(`MESSAGE WEBHOOK : Vous avez envoyé "${req.body.queryResult.parameters.message}"`);
   }
