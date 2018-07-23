@@ -9,8 +9,8 @@ const PORT = process.env.PORT || 8080;
 app.post('/webhook', (req, res) => {
 
   console.log('requête :');
-  console.log(JSON.stringify(req));
-    
+  console.log(req);
+
   const agent = new WebhookClient({ request: req, response: res });
 
   function envoyerMessageFollowup(agent) {
