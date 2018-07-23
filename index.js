@@ -6,7 +6,7 @@ const app = express();
 const PORT = process.env.PORT || 8080;
 
 
-app.get('/webhook', (req, res) => {
+app.post('/webhook', (req, res) => {
   const agent = new WebhookClient({ request: req, response: res });
 
   function envoyerMessageFollowup(agent) {
