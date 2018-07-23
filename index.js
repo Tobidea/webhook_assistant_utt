@@ -10,8 +10,11 @@ app.get('/webhook', (req, res) => {
   const agent = new WebhookClient({ request: req, response: res });
 
   function envoyerMessageFollowup(agent) {
+    console.log('Appel de envoyermessage, contenu de la requête :');
+    console.log(JSON.stringify(req));
     agent.add(`MESSAGE WEBHOOK : Vous avez envoyé "${req.body.queryResult.parameters.message}"`);
   }
+
   const intentMap = new Map();
   intentMap.set('envoyer.message - demander message', envoyerMessageFollowup);
 
