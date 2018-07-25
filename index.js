@@ -25,7 +25,7 @@ app.post('/webhook', (req, res) => {
       console.log(`Recherche d'informations sur l'UE ${agent.parameters.codeUE}`);
 
       try{
-        await fetch(`http://assistantutt.ga:8080/get/UE?code=${agent.parameters.codeUE}`)
+        return await fetch(`http://assistantutt.ga:8080/get/UE?code=${agent.parameters.codeUE}`)
         .then(resultat => resultat.json())
         .then((UE) => {
           if (!UE.error){
