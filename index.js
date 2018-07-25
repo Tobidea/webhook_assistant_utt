@@ -39,10 +39,9 @@ app.post('/webhook', (req, res) => {
         console.log('Une erreur est survenue :');
         console.log(err);
         agent.add('Désolé une erreur est survenue...');
-      } else {
-        return
       }
-
+    } else {
+      return 0;
     }
 
   }
