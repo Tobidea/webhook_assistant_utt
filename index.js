@@ -1,6 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-// const fetch = require('node-fetch');
+const fetch = require('node-fetch');
 const { WebhookClient } = require('dialogflow-fulfillment');
 
 const app = express();
@@ -19,11 +19,28 @@ app.post('/webhook', (req, res) => {
     agent.add(`MESSAGE WEBHOOK : Vous avez envoyé "${agent.parameters.message}"`);
   }
 
-  function getInfoUE(agent) {
-    console.log(`${agent.intent}`);
-    console.log(`Recherche d'informations sur l'UE ${agent.parameters.codeUE}`);
+  async function getInfoUE(agent) {
+    if (agent.parameters.codeUE) {
+      console.log(`${agent.intent}`);
+      console.log(`Recherche d'informations sur l'UE ${agent.parameters.codeUE}`);
 
-    // fetch(`http://assistantutt.ga:8080/get/UE?code=${agent.parameters.codeUE}`);
+      try{
+        await fetch(`http://assistantutt.ga:8080/get/UE?code=${agent.parameters.codeUE}`)
+        .then(resultat => resultat.json())
+        .then((UE) => {
+          if (!UE.error){
+            agent.add(`${UE.code} : ${UE.nom}`);
+            agent.add(UE.description);
+          } else {
+            agent.add(`Désolé, ${agent.parameters.codeUE} n'a pas pu être trouvée...`)
+          }
+        });
+      } catch (err) {
+        console.log('Une erreur est survenue :');
+        console.log(err);
+      }
+
+    }
 
   }
 
