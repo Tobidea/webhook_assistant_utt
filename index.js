@@ -41,7 +41,7 @@ app.post('/webhook', (req, res) => {
         agent.add('Désolé une erreur est survenue...');
       }
     } else {
-      return 0;
+      agent.add('Sur quelle UE voulez vous des informations?');
     }
 
   }
