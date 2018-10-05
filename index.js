@@ -14,22 +14,22 @@ app.post('/webhook', (req, res) => {
   const agent = new WebhookClient({ request: req, response: res });
 
   // Fonction qui gère l'envoi des messages aux développeurs
-  // async function envoyerMessageFollowup(agent) {
-  //   console.log(`${agent.intent} : "${agent.parameters.message}"`);
-  //
-  //   try{
-  //     return await fetch('http://assistantutt.ga:8080/add/userFeedback', {
-  //       method: 'POST',
-  //       body: {
-  //         contenu: agent.parameters.message,
-  //       },
-  //     })
-  //     .then(() => agent.add(`Vous avez envoyé "${agent.parameters.message}" aux développeurs !`));
-  //   } catch (err) {
-  //     console.log(err);
-  //     agent.add('Une erreur est survenue lors de l\'envoi du message...');
-  //   }
-  // }
+  async function envoyerMessageFollowup(agent) {
+    console.log(`${agent.intent} : "${agent.parameters.message}"`);
+
+    try{
+      return await fetch('http://assistantutt.ga:8080/add/userFeedback', {
+        method: 'POST',
+        body: {
+          contenu: agent.parameters.message,
+        },
+      })
+      .then(() => agent.add(`Vous avez envoyé "${agent.parameters.message}" aux développeurs !`));
+    } catch (err) {
+      console.log(err);
+      agent.add('Une erreur est survenue lors de l\'envoi du message...');
+    }
+  }
 
   async function getInfoUE(agent) {
     if (agent.parameters.codeUE) {
