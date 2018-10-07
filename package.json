@@ -2,9 +2,9 @@
   "name": "webhook_assistant",
   "version": "1.0.0",
   "description": "Webhook Dialogflow de l'Assistant UTT",
-  "main": "index.js",
+  "main": "webhook.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "node webhook.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Lionel EA",
