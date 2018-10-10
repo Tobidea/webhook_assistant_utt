@@ -22,9 +22,8 @@ module.exports = async function handleAboutUE(agent) {
     return await fetchOneUE(codeUE)
       .then((ue) => {
         agent.add(`${ue.code} : ${ue.titre}`);
-        ue.objectif.forEach((obj) => {
-          agent.add(obj);
-        });
+        agent.add(`C'est une ${ue.categorie} et elle donne ${ue.credits} crédits ECTS.`)
+
       });
   } else {
     // This is when user hasn't mentioned any UE name.
