@@ -1,5 +1,5 @@
 const fetch = require('node-fetch');
-const { WebhookClient } = require('dialogflow-fulfillment');
+const { Suggestion } = require('dialogflow-fulfillment');
 
 
 async function fetchOneUE(code) {
@@ -21,14 +21,13 @@ module.exports = async function handleAboutUE(agent) {
     // if Dialogflow detected an UE entity in the user request
     return await fetchOneUE(codeUE)
       .then((ue) => {
-        agent.add(`${ue.code} : ${ue.titre}`);
-        agent.add(`C'est une ${ue.categorie} \n et elle donne ${ue.credits} crédits ECTS.`)
-        agent.add(`C'est une ${ue.categorie} \n  \n et elle donne ${ue.credits} crédits ECTS.`)
-        agent.add(`C'est une ${ue.categorie} <br>et elle donne ${ue.credits} crédits ECTS.`)
-        agent.add(`C'est une ${ue.categorie} <center></center>et elle donne ${ue.credits} crédits ECTS.`)
-        agent.add(`C'est une ${ue.categorie} \u000Aet elle donne ${ue.credits} crédits ECTS.`)
-        agent.add(`C'est une ${ue.categorie} &nbsp et elle donne ${ue.credits} crédits ECTS.`)
+        let suggestion = new Suggestion('Objectifs de l\'UE');
+        let suggestion2 = new Suggestion('test2');
 
+        agent.add(`${ue.code} : ${ue.titre}. \n
+          C'est une UE qui donne ${ue.categorie} qui donne ${ue.credits} crédits ECTS.`);
+        agent.add(suggestion);
+        agent.add(suggestion2);
       });
   } else {
     // This is when user hasn't mentioned any UE name.
