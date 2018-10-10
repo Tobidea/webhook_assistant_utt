@@ -39,7 +39,12 @@ module.exports = async function handleAboutUE(agent) {
     if (!agent.getContext('context-wrongUE')) {
       agent.add('Vous voulez des infos sur quelle UE?');
     } else {
-      agent.add('Pardon, je ne connais pas cette UE !')
+      agent.add('Pardon, je ne connais pas cette UE !');
+      agent.setContext({
+        name: 'context-wrongUE',
+        lifespan: '3',
+        parameters: {},
+      });
     }
 
   }
