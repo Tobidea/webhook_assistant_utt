@@ -22,18 +22,22 @@ module.exports = async function handleAboutUE(agent) {
     return await fetchOneUE(codeUE)
       .then((ue) => {
         let suggestion = new Suggestion('Objectifs de l\'UE');
-        let suggestion2 = new Suggestion('test2');
 
-        agent.add(`${ue.code} : ${ue.titre}. \n
-          C'est une UE qui donne ${ue.categorie} qui donne ${ue.credits} crédits ECTS.`);
+        const context = {
+          name: 'context-UE',
+          lifespan: 1,
+          parameters: { ue },
+        }
+
+        agent.add(`${ue.code} : ${ue.titre}.\nC'est une UE qui donne ${ue.categorie} qui donne ${ue.credits} crédits ECTS.`);
         agent.add(suggestion);
-        agent.add(suggestion2);
+
+        agent.setContext(context);
       });
   } else {
     // This is when user hasn't mentioned any UE name.
-    if (!slotfiller) {
-      agent.add('Vous voulez des infos sur quelle UE?')
-      slotfiller = true;
+    if (!agent.getContext('context-wrongUE')) {
+      agent.add('Vous voulez des infos sur quelle UE?');
     } else {
       agent.add('Pardon, je ne connais pas cette UE !')
     }
