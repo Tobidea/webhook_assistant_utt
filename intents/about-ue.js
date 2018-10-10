@@ -22,7 +22,12 @@ module.exports = async function handleAboutUE(agent) {
     return await fetchOneUE(codeUE)
       .then((ue) => {
         agent.add(`${ue.code} : ${ue.titre}`);
-        agent.add(`C'est une ${ue.categorie} et elle donne ${ue.credits} crédits ECTS.`)
+        agent.add(`C'est une ${ue.categorie} \n et elle donne ${ue.credits} crédits ECTS.`)
+        agent.add(`C'est une ${ue.categorie} \n  \n et elle donne ${ue.credits} crédits ECTS.`)
+        agent.add(`C'est une ${ue.categorie} <br>et elle donne ${ue.credits} crédits ECTS.`)
+        agent.add(`C'est une ${ue.categorie} <center></center>et elle donne ${ue.credits} crédits ECTS.`)
+        agent.add(`C'est une ${ue.categorie} \u000Aet elle donne ${ue.credits} crédits ECTS.`)
+        agent.add(`C'est une ${ue.categorie} &nbsp et elle donne ${ue.credits} crédits ECTS.`)
 
       });
   } else {
