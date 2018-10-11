@@ -41,7 +41,7 @@ module.exports = async function handleAboutUE(agent) {
       agent.setContext({
         name: 'context-wrongUE',
         lifespan: '2',
-        parameters: {};
+        parameters: {},
       });
     } else {
       agent.add('Pardon, je ne connais pas cette UE !');
