@@ -17,16 +17,16 @@ module.exports = async function handleAboutUEobjectif(agent) {
   const ueContext = agent.getContext('context-ue');
 
   if (agent.parameters.codeUE) {
-    return await fetchOneUE(codeUE)
+    return await fetchOneUE(agent.parameters.codeUE)
       .then((ue) => {
         let objectifStr = ['- ', ueContext.objectif].join('\n- ');
         agent.add(`Voici les objectifs de ${ue.code} :`);
         agent.add(objectifStr);
       });
   } else if (ueContext) {
-    let objectifStr = ['- ', ueContext.parameters.objectif].join('\n- ');
+    let objectifStr = ['- ', ...ueContext.parameters.objectif].join('\n- ');
     agent.add(objectifStr);
   } else {
-    agent.add('Objectif de...? 🤔')
+    agent.add('Objectifs de quoi...? 🤔');
   }
 }
