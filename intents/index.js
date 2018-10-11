@@ -8,6 +8,8 @@ function test(agent) {
   console.log('alternative : ' + JSON.stringify(agent.alternativeQueryResults, null, 2));
   console.log('query : ' + JSON.stringify(agent.query, null, 2));
   console.log('context : ' + JSON.stringify(agent.contexts, null, 2));
+  console.log('getcontext: ' + JSON.stringify(agent.getContext('context-ue')));
+  console.log('getcontext: ' + JSON.stringify(agent.getContext('context-wrongue')));
 }
 
 intentArrayMapping = [
