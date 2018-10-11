@@ -24,7 +24,7 @@ module.exports = async function handleAboutUE(agent) {
         let suggestion = new Suggestion('Objectifs de l\'UE');
 
         const context = {
-          name: 'context-UE',
+          name: 'context-ue',
           lifespan: 1,
           parameters: { ue },
         }

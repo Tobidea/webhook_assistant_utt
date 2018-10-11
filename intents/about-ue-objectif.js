@@ -12,9 +12,9 @@ async function fetchOneUE(code) {
 }
 
 module.exports = async function handleAboutUEobjectif(agent) {
-  console.log(`${agent.intent} called with parameters : ${JSON.stringify(agent.parameters)}`)
+  console.log(`${agent.intent} called with parameters : ${JSON.stringify(agent.parameters)} and contexts ${JSON.stringify(agent.contexts)}`)
 
-  const ueContext = agent.getContext('context-UE').parameters.ue;
+  const ueContext = agent.getContext('context-ue');
 
   if (agent.parameters.codeUE) {
     return await fetchOneUE(codeUE)
@@ -24,7 +24,7 @@ module.exports = async function handleAboutUEobjectif(agent) {
         agent.add(objectifStr);
       });
   } else if (ueContext) {
-    let objectifStr = ['- ', ueContext.objectif].join('\n- ');
+    let objectifStr = ['- ', ueContext.parameters.objectif].join('\n- ');
     agent.add(objectifStr);
   } else {
     agent.add('Objectif de...? 🤔')
