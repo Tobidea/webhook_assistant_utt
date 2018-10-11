@@ -38,13 +38,15 @@ module.exports = async function handleAboutUE(agent) {
     // This is when user hasn't mentioned any UE name.
     if (!agent.getContext('context-wrongUE')) {
       agent.add('Vous voulez des infos sur quelle UE?');
-    } else {
-      agent.add('Pardon, je ne connais pas cette UE !');
       agent.setContext({
         name: 'context-wrongUE',
-        lifespan: '3',
+        lifespan: '2',
         parameters: {},
+    } else {
+      agent.add('Pardon, je ne connais pas cette UE !');
       });
+
+
     }
 
   }
