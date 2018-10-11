@@ -28,7 +28,7 @@ module.exports = async function handleAboutUE(agent) {
           parameters: { ue },
         }
 
-        agent.add(`${ue.code} : ${ue.titre}.\nC'est une UE qui donne ${ue.categorie} qui donne ${ue.credits} crédits ECTS.`);
+        agent.add(`${ue.code} : ${ue.titre}.\nC'est une UE qui donne ${ue.categorie} qui donne ${ue.credits} crédits ECTS et est disponible en ${ue.semestre}.`);
         agent.add(new Suggestion ('Objectifs de l\'UE'));
         agent.add(new Suggestion ('Programme de l\'UE'));
 

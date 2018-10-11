@@ -1,4 +1,5 @@
 const fetch = require('node-fetch');
+const { Suggestion } = require('dialogflow-fulfillment');
 
 async function fetchOneUE(code) {
   try {
@@ -25,7 +26,7 @@ module.exports = async function handleAboutUEobjectif(agent) {
         let objectifStr = ue.objectif.join('\n- ');
         objectifStr = `- ${objectifStr}`;
 
-        agent.add(`Voici les objectifs de ${ue.code} :`);
+        agent.add(`Voici les de ${ue.code} :`);
         agent.add(objectifStr);
       });
   } else if (ueContext) {

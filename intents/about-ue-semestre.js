@@ -1,4 +1,5 @@
 const fetch = require('node-fetch');
+const { Suggestion } = require('dialogflow-fulfillment');
 
 async function fetchOneUE(code) {
   try {
@@ -11,29 +12,29 @@ async function fetchOneUE(code) {
   }
 }
 
-module.exports = async function handleAboutUEprogramme(agent) {
+module.exports = async function handleAboutUEsemestre(agent) {
   console.log(`${agent.intent} called with parameters : ${JSON.stringify(agent.parameters)} and contexts ${JSON.stringify(agent.contexts)}`)
 
   const ueContext = agent.getContext('context-ue');
-
+  let ue;
   // There is 2 cases : If user had prompted a UE before, you will have a
   // context and know which UE's objectif user wants. We won't need to fetch to
   // the API again because the UE will be stored in the context object.
   if (agent.parameters.codeUE) {
     return await fetchOneUE(agent.parameters.codeUE)
-      .then((ue) => {
-        let programmeStr = ue.programme.join('\n- ');
-        programmeStr = `- ${programmeStr}`;
-
-        agent.add(`Voici le programme de ${ue.code} :`);
-        agent.add(programmeStr);
-      });
+      .then(ueFetched => ue = ueFetched);
   } else if (ueContext) {
-    let programmeStr = ueContext.parameters.ue.objectif.join('\n- ');
-    programmeStr = `- ${programmeStr}`; // Just to add the "-" to the first element.
-
-    agent.add(programmeStr);
+    ue = ueContext;
   } else {
-    agent.add('Programme de quelle UE...? 🤔');
+    agent.add('Disponibilité de quelle UE?');
   }
+
+  if (ue) {
+
+    const semestres = ue.semestre.split(' / ');
+    const response = semestres.length === 2? `${semestres[0]} et ${semestres[1]}`:`${semestres[0]}`;
+
+    agent.add(`${ue.code} est disponible en ${response}`);
+  }
+
 }
