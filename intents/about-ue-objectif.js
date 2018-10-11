@@ -19,12 +19,16 @@ module.exports = async function handleAboutUEobjectif(agent) {
   if (agent.parameters.codeUE) {
     return await fetchOneUE(agent.parameters.codeUE)
       .then((ue) => {
-        let objectifStr = ['- ', ueContext.objectif].join('\n- ');
+        let objectifStr = ue.objectif.join('\n- ');
+        objectifStr = `- ${objectifStr}`;
+
         agent.add(`Voici les objectifs de ${ue.code} :`);
         agent.add(objectifStr);
       });
   } else if (ueContext) {
-    let objectifStr = ['- ', ...ueContext.parameters.objectif].join('\n- ');
+    let objectifStr = ueContext.parameters.ue.objectif.join('\n- ');
+    objectifStr = `- ${objectifStr}`; // Just to add the "-" to the first element.
+    
     agent.add(objectifStr);
   } else {
     agent.add('Objectifs de quoi...? 🤔');
