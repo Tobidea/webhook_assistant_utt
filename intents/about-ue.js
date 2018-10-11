@@ -40,7 +40,7 @@ module.exports = async function handleAboutUE(agent) {
       agent.add('Vous voulez des infos sur quelle UE?');
       agent.setContext({
         name: 'context-wrongUE',
-        lifespan: '2',
+        lifespan: '1',
         parameters: {},
       });
     } else {

@@ -1,6 +1,7 @@
 const intents = {}
 
 intents.handleAboutUE = require('./about-ue');
+intents.handleAboutUEobjectif = require('./about-ue-objectif')
 
 function test(agent) {
   console.log('session: ' +JSON.stringify(agent.session, null, 2));
@@ -12,9 +13,10 @@ function test(agent) {
   console.log('getcontext: ' + JSON.stringify(agent.getContext('context-wrongue')));
 }
 
-intentArrayMapping = [
+const intentArrayMapping = [
   ['about.UE', intents.handleAboutUE],
   ['intentTest', test],
+  ['about.UE.objectif', intents.handleAboutUEobjectif],
 ]
 
 const intentMap = new Map(intentArrayMapping);
