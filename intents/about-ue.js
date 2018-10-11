@@ -21,7 +21,6 @@ module.exports = async function handleAboutUE(agent) {
     // if Dialogflow detected an UE entity in the user request
     return await fetchOneUE(codeUE)
       .then((ue) => {
-        let suggestion = new Suggestion('Objectifs de l\'UE');
 
         const context = {
           name: 'context-ue',
@@ -30,7 +29,8 @@ module.exports = async function handleAboutUE(agent) {
         }
 
         agent.add(`${ue.code} : ${ue.titre}.\nC'est une UE qui donne ${ue.categorie} qui donne ${ue.credits} crédits ECTS.`);
-        agent.add(suggestion);
+        agent.add(new Suggestion ('Objectifs de l\'UE'));
+        agent.add(new Suggestion ('Programme de l\'UE'));
 
         agent.setContext(context);
       });

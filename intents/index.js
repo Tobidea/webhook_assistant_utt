@@ -1,7 +1,8 @@
 const intents = {}
 
 intents.handleAboutUE = require('./about-ue');
-intents.handleAboutUEobjectif = require('./about-ue-objectif')
+intents.handleAboutUEobjectif = require('./about-ue-objectif');
+intents.handleAboutUEprogramme = require('./about-ue-programme'); 
 
 function test(agent) {
   console.log('session: ' +JSON.stringify(agent.session, null, 2));
@@ -17,6 +18,7 @@ const intentArrayMapping = [
   ['about.UE', intents.handleAboutUE],
   ['intentTest', test],
   ['about.UE.objectif', intents.handleAboutUEobjectif],
+  ['about.UE.programme', intents.handleAboutUEprogramme],
 ]
 
 const intentMap = new Map(intentArrayMapping);

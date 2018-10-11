@@ -11,7 +11,7 @@ async function fetchOneUE(code) {
   }
 }
 
-module.exports = async function handleAboutUEobjectif(agent) {
+module.exports = async function handleAboutUEprogramme(agent) {
   console.log(`${agent.intent} called with parameters : ${JSON.stringify(agent.parameters)} and contexts ${JSON.stringify(agent.contexts)}`)
 
   const ueContext = agent.getContext('context-ue');
@@ -22,18 +22,18 @@ module.exports = async function handleAboutUEobjectif(agent) {
   if (agent.parameters.codeUE) {
     return await fetchOneUE(agent.parameters.codeUE)
       .then((ue) => {
-        let objectifStr = ue.objectif.join('\n- ');
-        objectifStr = `- ${objectifStr}`;
+        let programmeStr = ue.programme.join('\n- ');
+        programmeStr = `- ${programmeStr}`;
 
         agent.add(`Voici les objectifs de ${ue.code} :`);
-        agent.add(objectifStr);
+        agent.add(programmeStr);
       });
   } else if (ueContext) {
-    let objectifStr = ueContext.parameters.ue.objectif.join('\n- ');
-    objectifStr = `- ${objectifStr}`; // Just to add the "-" to the first element.
+    let programmeStr = ueContext.parameters.ue.objectif.join('\n- ');
+    programmeStr = `- ${programmeStr}`; // Just to add the "-" to the first element.
 
-    agent.add(objectifStr);
+    agent.add(programmeStr);
   } else {
-    agent.add('Objectifs de quoi...? 🤔');
+    agent.add('Programme de quelle UE...? 🤔');
   }
 }
