@@ -1,16 +1,6 @@
 const fetch = require('node-fetch');
 const { Suggestion } = require('dialogflow-fulfillment');
-
-async function fetchOneUE(code) {
-  try {
-    return await fetch(`http://assistantutt.ga:8080/ue/${code}`)
-      .then(result => result.json());
-
-  } catch (err) {
-    console.log(`An error occured when fetching one UE : ${err}`);
-    return new Error('Error when fetching UE')
-  }
-}
+const fetchOneUE = require('../helpers/fetchOneUE');
 
 module.exports = async function handleAboutUEobjectif(agent) {
   console.log(`${agent.intent} called with parameters : ${JSON.stringify(agent.parameters)} and contexts ${JSON.stringify(agent.contexts)}`)
