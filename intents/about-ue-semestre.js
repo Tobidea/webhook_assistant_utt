@@ -11,18 +11,14 @@ module.exports = async function handleAboutUEsemestre(agent) {
   // context and know which UE's objectif user wants. We won't need to fetch to
   // the API again because the UE will be stored in the context object.
   if (agent.parameters.codeUE) {
-    console.log('CAS PASSAGE 1');
     ue = await fetchOneUE(agent.parameters.codeUE);
   } else if (ueContext) {
-    console.log('CAS PASSAGE 2');
-    ue = ueContext;
+    ue = ueContext.parameters.ue;
   } else {
-    console.log('CAS PASSAGE 3');
-    agent.add('Disponibilité de quelle UE?');
+    agent.add('Disponibilité?');
   }
 
   if (ue) {
-    console.log('DANS LE IF ' + ue);
     const semestres = ue.semestre.split(' / ');
     const response = semestres.length === 2? `${semestres[0]} et ${semestres[1]}`:`${semestres[0]}`;
 
