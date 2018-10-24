@@ -18,7 +18,11 @@ module.exports = async function handleAboutUE(agent) {
           parameters: { ue },
         }
 
-        agent.add(`${ue.code} : ${ue.titre}.\nC'est une UE qui donne ${ue.categorie} qui donne ${ue.credits} crédits ECTS et est disponible en ${ue.semestre}.`);
+        // If the semester field is empty it shouldn't display it.
+        const ansSemester = ue.semestre? `Cette UE est disponible en ${ue.semestre}`:''
+
+        agent.add(`${ue.code} : ${ue.titre}`);
+        agent.add(`C'est une ${ue.categorie} qui donne ${ue.credits} crédits ECTS. ${ansSemester}`);
         agent.add(new Suggestion ('Objectifs de l\'UE'));
         agent.add(new Suggestion ('Programme de l\'UE'));
 
