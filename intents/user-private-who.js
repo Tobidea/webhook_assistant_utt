@@ -6,7 +6,7 @@ module.exports = async function handleUserPrivateWho(agent) {
     console.log(`${agent.intent} called with parameters : ${JSON.stringify(agent.parameters)}`)
 
     try {
-        const result = await fetchPrivateUserInfo(agent.senderId);
+        const result = await fetchPrivateUserInfo(agent.senderId, agent);
         
         // Checks if response has an error in it. If so it is most likely
         // that user has not authenticated.
