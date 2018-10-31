@@ -12,7 +12,11 @@ module.exports = async function handleUserPrivateWho(agent) {
         if (result.error) {
             return agent.setFollowupEvent('error_USER_NOT_AUTHENTICATED');
         } else {
-            return agent.add(`Tu es ${result.firstname} non?`);
+            console.log(result);
+            let firstName = result.firstName.toLowerCase();
+            firstName = firstName.charAt(0).toUpperCase() + firstName.slice(1);
+            agent.add(`Je sais, tu es ${firstName} !`);
+            return agent.add(`Hé d'ailleurs tu serais pas en ${result.uvs[0]} avec moi? ;)`)
         }
     } catch(err) {
         console.log(err);
