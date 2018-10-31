@@ -9,7 +9,7 @@ module.exports = async function handleUserPrivateUeFollowed(agent) {
         agent,
         contextName: 'privateUserInfo',
         callback: async () => {
-            return await fetchPrivateUserInfo(agent.senderId);
+            return await fetchPrivateUserInfo(agent.senderId, agent);
         }
     });
 
