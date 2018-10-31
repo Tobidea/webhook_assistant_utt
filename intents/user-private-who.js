@@ -15,5 +15,4 @@ module.exports = async function handleUserPrivateWho(agent) {
         return agent.add(`Tu es ${result.firstname} non?`);
     }
 
-
 }
