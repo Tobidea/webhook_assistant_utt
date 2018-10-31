@@ -15,7 +15,7 @@ module.exports = async function handleAboutUEsemestre(agent) {
   } else if (ueContext) {
     ue = ueContext.parameters.ue;
   } else {
-    agent.add('Disponibilité?');
+    return agent.add('Disponibilité?');
   }
 
   // There is an issue with some UE because there is no semester field.
@@ -25,10 +25,9 @@ module.exports = async function handleAboutUEsemestre(agent) {
     console.log(semestres);
     const response = semestres.length === 2? `${semestres[0]} et ${semestres[1]}`:`${semestres[0]}`;
 
-    agent.add(`${ue.code} est disponible en ${response}`);
+    return agent.add(`${ue.code} est disponible en ${response}`);
   } else {
-    agent.add(`Désolé, je n'ai pas pu trouver cette information...`);
+    return agent.add(`Désolé, je n'ai pas pu trouver cette information...`);
   }
 
-  return;
 }

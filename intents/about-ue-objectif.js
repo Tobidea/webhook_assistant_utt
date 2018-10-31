@@ -23,10 +23,8 @@ module.exports = async function handleAboutUEobjectif(agent) {
     let objectifStr = ueContext.parameters.ue.objectif.join('\n- ');
     objectifStr = `- ${objectifStr}`; // Just to add the "-" to the first element.
 
-    agent.add(objectifStr);
+    return agent.add(objectifStr);
   } else {
-    agent.add('Objectifs de quoi...? 🤔');
+    return agent.add('Objectifs de quoi...? 🤔');
   }
-
-  return;
 }

@@ -22,10 +22,8 @@ module.exports = async function handleAboutUEprogramme(agent) {
     let programmeStr = ueContext.parameters.ue.objectif.join('\n- ');
     programmeStr = `- ${programmeStr}`; // Just to add the "-" to the first element.
 
-    agent.add(programmeStr);
+    return agent.add(programmeStr);
   } else {
-    agent.add('Programme de quelle UE...? 🤔');
+    return agent.add('Programme de quelle UE...? 🤔');
   }
-
-  return;
 }

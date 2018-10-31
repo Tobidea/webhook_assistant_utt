@@ -5,14 +5,15 @@ const controlAuth = require('../helpers/controlAuthentication');
 module.exports = async function handleUserPrivateWho(agent) {
     console.log(`${agent.intent} called with parameters : ${JSON.stringify(agent.parameters)}`)
 
-    const senderId = createSenderId(agent);
     try {
-        const result = await fetchPrivateUserInfo(senderId);
+        const result = await fetchPrivateUserInfo(agent.senderId);
         
+        // Checks if response has an error in it. If so it is most likely
+        // that user has not authenticated.
         if (result.error) {
             return agent.setFollowupEvent('error_USER_NOT_AUTHENTICATED');
         } else {
-            console.log(result);
+
             let firstName = result.firstName.toLowerCase();
             firstName = firstName.charAt(0).toUpperCase() + firstName.slice(1);
             agent.add(`Je sais, tu es ${firstName} !`);
