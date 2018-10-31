@@ -30,4 +30,5 @@ module.exports = async function handleAboutUEsemestre(agent) {
     agent.add(`Désolé, je n'ai pas pu trouver cette information...`);
   }
 
+  return;
 }

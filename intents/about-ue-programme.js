@@ -26,4 +26,6 @@ module.exports = async function handleAboutUEprogramme(agent) {
   } else {
     agent.add('Programme de quelle UE...? 🤔');
   }
+
+  return;
 }

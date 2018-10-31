@@ -27,4 +27,6 @@ module.exports = async function handleAboutUEobjectif(agent) {
   } else {
     agent.add('Objectifs de quoi...? 🤔');
   }
+
+  return;
 }
