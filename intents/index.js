@@ -16,6 +16,7 @@ const intentArrayMapping = [
   ['about.UE.programme', require('./about-ue-programme')],
   ['about.UE.semestre', require('./about-ue-semestre')],
   ['user.authenticate', require('./user-authenticate')],
+  ['user.private.who', require('./user-private-who')],
 ]
 
 const intentMap = new Map(intentArrayMapping);
