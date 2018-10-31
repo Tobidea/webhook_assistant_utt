@@ -5,6 +5,11 @@ module.exports = async function handleUserPrivateUeFollowed(agent) {
     try {
         console.log(`${agent.intent} called with parameters : ${JSON.stringify(agent.parameters)}`)
         
+        if (result.error) {
+            return agent.setFollowupEvent('error_USER_NOT_AUTHENTICATED');
+        }
+
+
         const userInfo = await isAlreadyInContext({
         agent,
         contextName: 'privateUserInfo',
