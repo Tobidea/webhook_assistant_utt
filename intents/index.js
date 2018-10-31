@@ -1,26 +1,21 @@
 const intents = {}
 
-intents.handleAboutUE = require('./about-ue');
-intents.handleAboutUEobjectif = require('./about-ue-objectif');
-intents.handleAboutUEprogramme = require('./about-ue-programme');
-intents.handleAboutUEsemestre = require('./about-ue-semestre')
-
 function test(agent) {
   console.log('session: ' +JSON.stringify(agent.session, null, 2));
   console.log('console message: ' + JSON.stringify(agent.consoleMessages, null, 2));
   console.log('alternative : ' + JSON.stringify(agent.alternativeQueryResults, null, 2));
   console.log('query : ' + JSON.stringify(agent.query, null, 2));
   console.log('context : ' + JSON.stringify(agent.contexts, null, 2));
-  console.log('getcontext: ' + JSON.stringify(agent.getContext('context-ue')));
-  console.log('getcontext: ' + JSON.stringify(agent.getContext('context-wrongue')));
+  // console.log('sessionc: ' + ));
 }
 
 const intentArrayMapping = [
-  ['about.UE', intents.handleAboutUE],
+  ['about.UE', require('./about-ue')],
   ['intentTest', test],
-  ['about.UE.objectif', intents.handleAboutUEobjectif],
-  ['about.UE.programme', intents.handleAboutUEprogramme],
-  ['about.UE.semestre', intents.handleAboutUEsemestre]
+  ['about.UE.objectif', require('./about-ue-objectif')],
+  ['about.UE.programme', require('./about-ue-programme')],
+  ['about.UE.semestre', require('./about-ue-semestre')],
+  ['user.authenticate', require('./user-authenticate')],
 ]
 
 const intentMap = new Map(intentArrayMapping);
