@@ -5,22 +5,19 @@ module.exports = async function handleUserPrivateUeFollowed(agent) {
     try {
         console.log(`${agent.intent} called with parameters : ${JSON.stringify(agent.parameters)}`)
         
-        if (result.error) {
+        const userInfo = await isAlreadyInContext({
+            agent,
+            contextName: 'private-user-info',
+            callback: async () => {
+                return await fetchPrivateUserInfo(agent);
+            }
+        });
+
+        if (userInfo.error) {
             return agent.setFollowupEvent('error_USER_NOT_AUTHENTICATED');
         }
 
-
-        const userInfo = await isAlreadyInContext({
-        agent,
-        contextName: 'privateUserInfo',
-        callback: async () => {
-            return await fetchPrivateUserInfo(agent.senderId, agent);
-        }
-    });
-
-    console.log(userInfo);
-    
-    // To create the list of UEs
+    // To stringify the list of UEs
     const ueString = userInfo.uvs.reduce((accumulator, currentUv) => (
         accumulator + ', ' + currentUv
         ));
