@@ -16,9 +16,9 @@ module.exports = class PrivateUserInfo {
      * Fetch data and assign it (and checks if data exists in context)
      */
     async fetchData() {
-        const data = await this.existsInContext(this.rawFetchData);
+        const data = await this.existsInContext(this.rawFetchData.bind(this));
     
-        this.data = {...this.data, data};
+        this.data = data;
         return data
     }
 
@@ -57,10 +57,10 @@ module.exports = class PrivateUserInfo {
      }
 
     isAuthenticated() {
-        return !this.error;
+        return !this.data.error;
     }
 
-    checkAuthentication() {
+    isAuthenticatedNextEvent() {
         if(this.isAuthenticated()) {
             return true;
         } else {

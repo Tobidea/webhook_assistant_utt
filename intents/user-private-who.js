@@ -3,7 +3,7 @@ const fetchPrivateUserInfo = require('../helpers/fetchPrivateUserInfo');
 const PrivateUserInfo = require('../classes/PrivateUserInfo');
 
 module.exports = async function handleUserPrivateWho(agent) {
-    console.log(`${agent.intent} called with parameters : ${JSON.stringify(agent.parameters)}`)
+    console.log(`${agent.senderId} : ${agent.intent} called with parameters : ${JSON.stringify(agent.parameters)}`)
 
     try {
         const userInfo = new PrivateUserInfo(agent);
@@ -12,11 +12,10 @@ module.exports = async function handleUserPrivateWho(agent) {
         
         // Checks if response has an error in it. If so it is most likely
         // that user has not authenticated.
-        if (userInfo.checkAuthentication()) return;
+        if (!userInfo.isAuthenticatedNextEvent()) return;
     
         let firstName = userInfo.data.firstName.toLowerCase();
         firstName = firstName.charAt(0).toUpperCase() + firstName.slice(1);
-        console.log('passage');
         agent.add(`Je sais, tu es ${firstName} !`);
         return agent.add(`Hé d'ailleurs tu serais pas en ${userInfo.data.uvs[0]} avec moi? ;)`)
         
