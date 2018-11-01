@@ -22,10 +22,10 @@ module.exports = async function handleUserPrivateUeFollowed(agent) {
         accumulator + ', ' + currentUv
         ));
         
-        return agent.add(`Vos UE ce semestre sont ${ueString}.`);
+        return agent.add(`Tes UE ce semestre sont ${ueString}.`);
     } catch (err) {
         console.log(err);
-        return agent.add(`J'ai eu un soucis en essayant de savoir vos UE !`);
+        return agent.add(`J'ai eu un soucis en essayant de retrouver tes UE !`);
     }
     
 }

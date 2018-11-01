@@ -1,24 +1,25 @@
 const createSenderId = require('../helpers/createApiSenderId');
 const fetchPrivateUserInfo = require('../helpers/fetchPrivateUserInfo');
-const controlAuth = require('../helpers/controlAuthentication');
+const PrivateUserInfo = require('../classes/PrivateUserInfo');
 
 module.exports = async function handleUserPrivateWho(agent) {
     console.log(`${agent.intent} called with parameters : ${JSON.stringify(agent.parameters)}`)
 
     try {
-        const result = await fetchPrivateUserInfo(agent);
+        const userInfo = new PrivateUserInfo(agent);
+        
+        await userInfo.fetchData();
         
         // Checks if response has an error in it. If so it is most likely
         // that user has not authenticated.
-        if (result.error) {
-            return agent.setFollowupEvent('error_USER_NOT_AUTHENTICATED');
-        } else {
-
-            let firstName = result.firstName.toLowerCase();
-            firstName = firstName.charAt(0).toUpperCase() + firstName.slice(1);
-            agent.add(`Je sais, tu es ${firstName} !`);
-            return agent.add(`Hé d'ailleurs tu serais pas en ${result.uvs[0]} avec moi? ;)`)
-        }
+        if (userInfo.checkAuthentication()) return;
+    
+        let firstName = userInfo.data.firstName.toLowerCase();
+        firstName = firstName.charAt(0).toUpperCase() + firstName.slice(1);
+        console.log('passage');
+        agent.add(`Je sais, tu es ${firstName} !`);
+        return agent.add(`Hé d'ailleurs tu serais pas en ${userInfo.data.uvs[0]} avec moi? ;)`)
+        
     } catch(err) {
         console.log(err);
         return agent.add(`Désolé, je n'ai pas réussi à savoir qui tu étais...`);
