@@ -18,6 +18,7 @@ const intentArrayMapping = [
   ['user.authenticate', require('./user-authenticate')],
   ['user.private.who', require('./user-private-who')],
   ['user.private.ueFollowed', require('./user-private-ueFollowed')],
+  ['user.private.schedule.next', require('./user-private-schedule-next')],
 ]
 
 const intentMap = new Map(intentArrayMapping);

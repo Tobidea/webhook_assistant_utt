@@ -1,24 +1,18 @@
 const isAlreadyInContext = require('../helpers/isAlreadyInContext');
 const fetchPrivateUserInfo = require('../helpers/fetchPrivateUserInfo');
+const PrivateUserInfo = require('../classes/PrivateUserInfo');
 
 module.exports = async function handleUserPrivateUeFollowed(agent) {
+    console.log(`${agent.intent} called with parameters : ${JSON.stringify(agent.parameters)} and contexts ${JSON.stringify(agent.contexts)}`);
+    
     try {
-        console.log(`${agent.intent} called with parameters : ${JSON.stringify(agent.parameters)}`)
-        
-        const userInfo = await isAlreadyInContext({
-            agent,
-            contextName: 'private-user-info',
-            callback: async () => {
-                return await fetchPrivateUserInfo(agent);
-            }
-        });
+        const userInfo = new PrivateUserInfo(agent);
+        await userInfo.fetchData();
+        if (!userInfo.isAuthenticatedNextEvent()) return;
 
-        if (userInfo.error) {
-            return agent.setFollowupEvent('error_USER_NOT_AUTHENTICATED');
-        }
 
     // To stringify the list of UEs
-    const ueString = userInfo.uvs.reduce((accumulator, currentUv) => (
+    const ueString = userInfo.data.uvs.reduce((accumulator, currentUv) => (
         accumulator + ', ' + currentUv
         ));
         
