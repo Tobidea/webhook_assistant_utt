@@ -38,7 +38,7 @@ module.exports = class Fetcher {
         const context = this.agent.getContext(this.contextName);
 
         if (context) {
-                console.log(`${contextName} context already exists, no fetch required.`);
+                console.log(`${this.contextName} context already exists, no fetch required.`);
                 this._hasLoaded = true;
                 return context.parameters;
         } else {

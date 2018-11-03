@@ -23,10 +23,11 @@ module.exports = class PrivateUserInfoSchedule extends Fetcher {
             .then(schedule => {
                 // We are adding ID to every course so we can find them easier
                 schedule.forEach((course) => {
-                course.id = counter;
-                course.startFloat = course.start.hour + course.start.minute / 60;
-                counter += 1;
-            });
+                    course.id = counter;
+                    course.startFloat = course.start.hour + course.start.minute / 60;
+                    counter += 1;
+                });
+                
                 return schedule;
             });
     
