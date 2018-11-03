@@ -35,7 +35,7 @@ module.exports = class Fetcher {
      * to fetch has already been put in context of the session. 
      */
     async existsInContext(callback) {
-        const context = this.agent.getContext(parameters.contextName);
+        const context = this.agent.getContext(this.contextName);
 
         if (context) {
                 console.log(`${contextName} context already exists, no fetch required.`);

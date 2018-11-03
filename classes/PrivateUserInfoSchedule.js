@@ -64,7 +64,7 @@ module.exports = class PrivateUserInfoSchedule extends Fetcher {
         // so we can compare time easily.
         const time = date.getHours() + date.getMinutes() / 60;
    
-        const matchedCourse = schedule.find(course => (
+        const matchedCourse = this.data.find(course => (
             course.day === days[date.getDay()] &&
             course.start.hour + course.start.minute / 60 <= time &&
             course.end.hour + course.end.minute / 60 >= time
@@ -82,6 +82,9 @@ module.exports = class PrivateUserInfoSchedule extends Fetcher {
 
         const time = date.getHours() + date.getMinutes() / 60;
 
+        // let matchedCourse = this.data.forEach(() => {
+
+        // })
         
         
     }
@@ -90,7 +93,7 @@ module.exports = class PrivateUserInfoSchedule extends Fetcher {
      * Returns matched course for current time
      */
     getNow() {
-        return match(new Date());
+        return this.match(new Date());
     }
 
     /**
