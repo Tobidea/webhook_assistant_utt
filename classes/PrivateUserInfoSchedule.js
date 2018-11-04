@@ -14,34 +14,56 @@ module.exports = class PrivateUserInfoSchedule extends Fetcher {
 
     async rawFetchData() {
         let counter = 0;
-        const result = await fetch('http://assistantutt.ga:8080/api/users/private/schedule', {
+
+        const schedule = await fetch('http://assistantutt.ga:8080/api/users/private/schedule', {
             method: 'GET',
             headers: {
                 'Sender-Id': this.agent.senderId,
             },
-        })  .then(schedule => schedule.json())
-            .then(schedule => {
-                // We are adding ID to every course so we can find them easier
-                schedule.forEach((course) => {
-                    course.id = counter;
-                    course.startFloat = course.start.hour + course.start.minute / 60;
-                    counter += 1;
-                });
-                
-                return schedule;
-            });
-    
+        })  .then(schedule => schedule.json());
+
+        // This is to wrap the schedule array in an object 'schedule'
+        
         // We set a context in which we put results of fetched data
         // so we don't have to fetch to the API again.
-        if(!result.error) {
+        if(!schedule.error) {
+            const result = { schedule };
+
+            const days = {
+                sunday: [0, 'Dimanche'],
+                monday: [1, 'Lundi'],
+                tuesday: [2, 'Mardi'],
+                wednesday: [3, 'Mercredi'],
+                thursday: [4, 'Jeudi'],
+                friday: [5, 'Vendredi'],
+                saturday: [6, 'Samedi'], 
+            };
+
+            result.schedule.forEach((course) => {
+                // We are adding ID to every course so we can find them easier
+                course.id = counter;
+                counter += 1;
+
+                // This number is to compare times easier
+                course.start.real = course.start.hour + course.start.minute / 60;
+                course.end.real = course.end.hour + course.end.minute / 60;
+
+                // This is to convert day into an integer
+                course.dayId = days[course.day][0];
+                course.dayFr = days[course.day][1];
+            });
+            
             this.agent.setContext({
                 name: this.contextName,
                 lifespan: '5',
                 parameters: result,
             });
+
+            return result;
         }
     
-        return result;
+        // LES RETURN A CHANGER PTET 
+        return schedule;
     }
 
     /**
@@ -51,24 +73,14 @@ module.exports = class PrivateUserInfoSchedule extends Fetcher {
     match(date) {
         this.hasLoadedCheck();
 
-        const days = [
-            'sunday',
-            'monday',
-            'tuesday',
-            'wednesday',
-            'thursday',
-            'friday',
-            'saturday',
-        ];
-
         // Convert time (hours and minutes) to a single real number
         // so we can compare time easily.
         const time = date.getHours() + date.getMinutes() / 60;
    
-        const matchedCourse = this.data.find(course => (
-            course.day === days[date.getDay()] &&
-            course.start.hour + course.start.minute / 60 <= time &&
-            course.end.hour + course.end.minute / 60 >= time
+        const matchedCourse = this.data.schedule.find(course => (
+            course.dayId === date.getDay() &&
+            course.start.real   <= time &&
+            course.end.real     >= time
         ));
 
         return matchedCourse;
@@ -82,12 +94,18 @@ module.exports = class PrivateUserInfoSchedule extends Fetcher {
         this.hasLoadedCheck();
 
         const time = date.getHours() + date.getMinutes() / 60;
-
-        // let matchedCourse = this.data.forEach(() => {
-
-        // })
         
+
+        const matchedCourse = this.data.schedule.find(course => (
+            course.dayId >= date.getDay() &&
+            course.start.real > time
+        ));
+
+        if (!matchedCourse) {
+            matchedCourse = this.data.schedule[0];
+        }
         
+        return matchedCourse;
     }
 
     /**
@@ -100,12 +118,19 @@ module.exports = class PrivateUserInfoSchedule extends Fetcher {
     /**
      * Returns next course for current time
      */
-    getNext() {
-        const currentCourse = this.getNow();
-        
-        return this.data.find(course => (
-            course.id === currentCourse.id
-        ));
+    getNext() {        
+        return this.matchNext(new Date());
+    }
+
+    addRelativeDay(currentDay, day) {   
+        const difference = day - currentDay;
+
+        const words = new Map([
+            [-2, 'avant-hier'],
+            [-1, 'hier'],
+            [1, 'demain'],
+            [2, 'après-demain']
+        ])
     }
     
 }
