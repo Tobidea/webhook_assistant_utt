@@ -1,27 +1,30 @@
+const path = require('path');
+const fs = require('fs');
+
 const intents = {}
 
-function test(agent) {
-  console.log('session: ' +JSON.stringify(agent.session, null, 2));
-  console.log('console message: ' + JSON.stringify(agent.consoleMessages, null, 2));
-  console.log('alternative : ' + JSON.stringify(agent.alternativeQueryResults, null, 2));
-  console.log('query : ' + JSON.stringify(agent.query, null, 2));
-  console.log('context : ' + JSON.stringify(agent.contexts, null, 2));
-  // console.log('sessionc: ' + ));
-}
-
 const intentArrayMapping = [
-  ['about.UE', require('./about-ue')],
-  ['intentTest', test],
-  ['about.UE.objectif', require('./about-ue-objectif')],
-  ['about.UE.programme', require('./about-ue-programme')],
-  ['about.UE.semestre', require('./about-ue-semestre')],
-  ['user.authenticate', require('./user-authenticate')],
-  ['user.private.who', require('./user-private-who')],
-  ['user.private.ueFollowed', require('./user-private-ueFollowed')],
-  ['user.private.schedule.next', require('./user-private-schedule-next')],
+  ['about.UE', require('./handlers/about.ue')],
+  ['about.UE.objectif', require('./about.ue.objectif')],
+  ['about.UE.programme', require('./handlers/about.ue.programme')],
+  ['about.UE.semestre', require('./about.ue.semestre')],
+  ['user.authenticate', require('./handlers/user.authenticate')],
+  ['user.private.who', require('./user.private.who')],
+  ['user.private.ueFollowed', require('./user.private.ueFollowed')],
+  ['user.private.schedule.next', require('./user.private.schedule.next')],
+  ['smalltalk.time', require('./user.private.schedule.next')],
 ]
 
-const intentMap = new Map(intentArrayMapping);
+const intentHandlersPath =  path.join(__dirname/ + 'handlers');
+const intentHandlersFiles = fs.readdirSync(intentHandlersPath);
+
+const intentMap = new Map();
+
+intentHandlersFiles.forEach((filename) => {
+  let intentName = filename.replace(/(\.js)$/, '');
+  intentMap.set(intentName, require(`./handlers/${filename}`))
+})
+
 
 module.exports = intents;
 module.exports.intentMap = intentMap;

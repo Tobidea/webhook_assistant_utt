@@ -1,5 +1,6 @@
 const fetch = require('node-fetch');
 const Fetcher = require('./Fetcher');
+const moment = require('moment-timezone');
 
 /**
  * This class represents a user schedule.
@@ -62,7 +63,7 @@ module.exports = class PrivateUserInfoSchedule extends Fetcher {
             return result;
         }
     
-        // LES RETURN A CHANGER PTET 
+        // LES RETURN A CHANGER C'EST MOCHE 
         return schedule;
     }
 
@@ -96,7 +97,7 @@ module.exports = class PrivateUserInfoSchedule extends Fetcher {
         const time = date.getHours() + date.getMinutes() / 60;
         
 
-        const matchedCourse = this.data.schedule.find(course => (
+        let matchedCourse = this.data.schedule.find(course => (
             course.dayId >= date.getDay() &&
             course.start.real > time
         ));
@@ -121,6 +122,7 @@ module.exports = class PrivateUserInfoSchedule extends Fetcher {
     getNext() {        
         return this.matchNext(new Date());
     }
+
 
     addRelativeDay(currentDay, day) {   
         const difference = day - currentDay;
