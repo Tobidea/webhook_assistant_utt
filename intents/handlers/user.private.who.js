@@ -1,6 +1,4 @@
-const createSenderId = require('../helpers/createApiSenderId');
-const fetchPrivateUserInfo = require('../helpers/fetchPrivateUserInfo');
-const PrivateUserInfo = require('../classes/PrivateUserInfo');
+const PrivateUserInfo = require('../../classes/PrivateUserInfo');
 
 module.exports = async function handleUserPrivateWho(agent) {
     console.log(`${agent.senderId} : ${agent.intent} called with parameters : ${JSON.stringify(agent.parameters)}`)

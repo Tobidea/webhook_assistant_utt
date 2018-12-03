@@ -1,6 +1,5 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const fetch = require('node-fetch');
 const { WebhookClient } = require('dialogflow-fulfillment');
 const intents = require('./intents');
 const createSenderId = require('./helpers/createApiSenderId');

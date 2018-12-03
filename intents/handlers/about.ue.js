@@ -1,4 +1,3 @@
-const fetch = require('node-fetch');
 const { Suggestion } = require('dialogflow-fulfillment');
 const fetchOneUE = require('../../helpers/fetchOneUE');
 

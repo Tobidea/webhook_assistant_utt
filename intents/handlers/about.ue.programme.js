@@ -1,4 +1,3 @@
-const fetch = require('node-fetch');
 const fetchOneUE = require('../../helpers/fetchOneUE');
 
 module.exports = async function handleAboutUEprogramme(agent) {

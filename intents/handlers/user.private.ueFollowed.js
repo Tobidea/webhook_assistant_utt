@@ -1,7 +1,8 @@
-const isAlreadyInContext = require('../helpers/isAlreadyInContext');
-const fetchPrivateUserInfo = require('../helpers/fetchPrivateUserInfo');
-const PrivateUserInfo = require('../classes/PrivateUserInfo');
+const PrivateUserInfo = require('../../classes/PrivateUserInfo');
 
+/**
+ * Send user's courses this semester.
+ */
 module.exports = async function handleUserPrivateUeFollowed(agent) {
     console.log(`${agent.intent} called with parameters : ${JSON.stringify(agent.parameters)} and contexts ${JSON.stringify(agent.contexts)}`);
     
@@ -21,5 +22,4 @@ module.exports = async function handleUserPrivateUeFollowed(agent) {
         console.log(err);
         return agent.add(`J'ai eu un soucis en essayant de retrouver tes UE !`);
     }
-    
 }

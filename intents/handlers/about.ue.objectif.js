@@ -1,6 +1,4 @@
-const fetch = require('node-fetch');
-const { Suggestion } = require('dialogflow-fulfillment');
-const fetchOneUE = require('../helpers/fetchOneUE');
+const fetchOneUE = require('../../helpers/fetchOneUE');
 
 module.exports = async function handleAboutUEobjectif(agent) {
   console.log(`${agent.intent} called with parameters : ${JSON.stringify(agent.parameters)} and contexts ${JSON.stringify(agent.contexts)}`)

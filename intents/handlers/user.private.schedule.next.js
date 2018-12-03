@@ -1,4 +1,4 @@
-const PrivateUserInfoSchedule = require('../classes/PrivateUserInfoSchedule');
+const PrivateUserInfoSchedule = require('../../classes/PrivateUserInfoSchedule');
 
 module.exports = async function handleUserPrivateScheduleNext(agent) {
     console.log(`${agent.intent} called with parameters : ${JSON.stringify(agent.parameters)} and contexts ${JSON.stringify(agent.contexts)}`)
