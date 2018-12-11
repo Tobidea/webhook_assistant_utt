@@ -12,7 +12,7 @@ module.exports = async function handleAboutUE(agent) {
       .then((ue) => {
         const context = {
           name: 'context-ue',
-          lifespan: 1,
+          lifespan: 4,
           parameters: { ue },
         }
 
@@ -28,6 +28,7 @@ module.exports = async function handleAboutUE(agent) {
       });
   } else {
     // This is when user hasn't mentioned any UE name.
+    // /!\ USELESS FOR NOW
     if (!agent.getContext('context-wrongUE')) {
       agent.add('Vous voulez des infos sur quelle UE?');
       agent.setContext({

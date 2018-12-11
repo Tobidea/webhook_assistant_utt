@@ -9,7 +9,7 @@ const intentHandlersFiles = fs.readdirSync(intentHandlersPath);
 const intentMap = new Map();
 
 intentHandlersFiles.forEach((filename) => {
-  const handler = require(`.handlers/${filename}`)
+  const handler = require(`./handlers/${filename}`)
   const intentName = filename.replace(/(\.js)$/, '');
   intentMap.set(intentName, handler)
 });
