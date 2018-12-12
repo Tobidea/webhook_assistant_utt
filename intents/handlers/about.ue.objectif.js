@@ -14,7 +14,7 @@ module.exports = async function handleAboutUEobjectif(agent) {
         let objectifStr = ue.objectif.join('\n- ');
         objectifStr = `- ${objectifStr}`;
 
-        agent.add(`Voici les de ${ue.code} :`);
+        agent.add(`Voici les objectifs de ${ue.code} :`);
         agent.add(objectifStr);
       });
   } else if (ueContext) {

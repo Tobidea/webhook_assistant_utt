@@ -5,9 +5,13 @@ const fetch = require('node-fetch');
  * It shouldn't be instanciated as it is and must be inherited.
  * rawFetchData method should be redefined and context name changed.
  */
-module.exports = class Fetcher {
+class Fetcher {
+
+    /**
+     * @param {WebhookClient} agent Dialogflow's WebhookClient agent object.
+     */
     constructor(agent) {
-        this.agent = agent; 
+        this.agent = agent;
         this.contextName = '';
         this.data = {};
         this._hasLoaded = false;
@@ -25,14 +29,16 @@ module.exports = class Fetcher {
 
     /**
      * This method has to be redefined in its subclasses.
+     * It should return results of fetching data in some kind of API.
      */
     async rawFetchData() {
         throw new Error('rawFetchData() method should be redefined in subclasses.')
     }
 
     /** 
-     * This is function avoids fetching to API multiple time if something we need
+     * This function avoids fetching to API multiple time if something we need
      * to fetch has already been put in context of the session. 
+     * @param {function()} callback Callback executed if context is empty.
      */
     async existsInContext(callback) {
         const context = this.agent.getContext(this.contextName);
@@ -48,10 +54,19 @@ module.exports = class Fetcher {
         }
      }
 
+    /**
+     * Checks if after fetching data, an error field has been sent or not
+     * @return A boolean indicating if user is authenticated or not
+     */
     isAuthenticated() {
         return !this.data.error;
     }
 
+    /**
+     * Checks if user is authenticated, and sets follow-up event to
+     * error_USER_NOT_AUTHENTICATED
+     * @return A boolean indicatif is user is authenticated or not
+     */
     isAuthenticatedNextEvent() {
         if(this.isAuthenticated()) {
             return true;
@@ -61,14 +76,29 @@ module.exports = class Fetcher {
         }
     }
 
-
+    /**
+     * Checks if data has loaded or not. If not, it throws an error.
+     */
     hasLoadedCheck() {
         if (!this.hasLoaded()) {
             throw new Error('Tried to access data but it is not loaded.');
         }
     }
 
+    /**
+     * Checks if data has loaded or not
+     * @return A boolean
+     */
     hasLoaded() {
         return this._hasLoaded;
     }
+
+    /**
+     * @return Returns data fetched by fetchData() function.
+     */
+    get data() {
+        return this.data;
+    }
 }
+
+module.exports = Fetcher;

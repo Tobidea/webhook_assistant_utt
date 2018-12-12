@@ -6,7 +6,7 @@ const Fetcher = require('./Fetcher');
  * Whenever a PrivareUserInfo object is instanciated, it fetches informations of agent.senderId
  * in the API and fills its attributes with the results.
  */
-module.exports = class PrivateUserInfo extends Fetcher {
+class PrivateUserInfo extends Fetcher {
     constructor(agent) {
         super(agent); 
         this.contextName = 'private-user-info'; // Name of the context it generates after fetching succesfully data
@@ -33,3 +33,5 @@ module.exports = class PrivateUserInfo extends Fetcher {
         return result;
     }
 }
+
+module.exports = PrivateUserInfo;

@@ -7,7 +7,7 @@ const moment = require('moment-timezone');
  * Whenever a PrivareUserInfo object is instanciated, it fetches informations of agent.senderId
  * in the API and fills its attributes with the results.
  */
-module.exports = class PrivateUserInfoSchedule extends Fetcher {
+class PrivateUserInfoSchedule extends Fetcher {
     constructor(agent) {
         super(agent); 
         this.contextName = 'private-user-info-schedule'; // Name of the context it generates after fetching succesfully data
@@ -88,15 +88,14 @@ module.exports = class PrivateUserInfoSchedule extends Fetcher {
     }
 
     /**
-     * Match the closest course to date
+     * Match the closest (next) course to date
      * @param {Date} date
      */
     matchNext(date) {
         this.hasLoadedCheck();
 
         const time = date.getHours() + date.getMinutes() / 60;
-        
-
+    
         let matchedCourse = this.data.schedule.find(course => (
             course.dayId >= date.getDay() &&
             course.start.real > time
@@ -136,3 +135,5 @@ module.exports = class PrivateUserInfoSchedule extends Fetcher {
     }
     
 }
+
+module.exports = PrivateUserInfoSchedule;
