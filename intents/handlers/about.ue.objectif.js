@@ -24,7 +24,7 @@ module.exports = async function handleAboutUEobjectif(agent) {
 
         const objectifStr = '- ' + ue.objectif.join('\n- ');
             
-        agent.add(`Voici le programme de ${ue.code} :`);
+        agent.add(`Voici les objectifs de ${ue.code} :`);
         agent.add(objectifStr);
 
     } catch (err) {
