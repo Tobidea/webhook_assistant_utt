@@ -18,11 +18,10 @@ module.exports = async function handleAboutUEobjectif(agent) {
         agent.add(objectifStr);
       });
   } else if (ueContext) {
-    let objectifStr = ueContext.parameters.ue.objectif.join('\n- ');
-    objectifStr = `- ${objectifStr}`; // Just to add the "-" to the first element.
+    const objectifStr = '- ' + ueContext.parameters.ue.objectif.join('\n- ');
 
     return agent.add(objectifStr);
   } else {
-    return agent.add('Objectifs de quoi...? 🤔');
+    return agent.add('Objectifs de quelle UE...? 🤔');
   }
 }

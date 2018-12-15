@@ -12,9 +12,9 @@ module.exports = async function handleUserPrivateUeFollowed(agent) {
         if (!userInfo.isAuthenticatedNextEvent()) return;
 
 
-    // To stringify the list of UEs
-    const ueString = userInfo.data.uvs.reduce((accumulator, currentUv) => (
-        accumulator + ', ' + currentUv
+        // To stringify the list of UEs
+        const ueString = userInfo.data.uvs.reduce((accumulator, currentUv) => (
+            accumulator + ', ' + currentUv
         ));
         
         return agent.add(`Tes UE ce semestre sont ${ueString}.`);

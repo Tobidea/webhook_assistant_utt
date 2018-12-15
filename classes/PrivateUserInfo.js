@@ -12,23 +12,13 @@ class PrivateUserInfo extends Fetcher {
         this.contextName = 'private-user-info'; // Name of the context it generates after fetching succesfully data
     }
 
-    async rawFetchData() {
+    async fetchCallback() {
         const result = await fetch('http://assistantutt.ga:8080/api/users/private/account', {
             method: 'GET',
             headers: {
                 'Sender-Id': this.agent.senderId,
             },
         })  .then((info) => info.json());
-    
-        // We set a context in which we put results of fetched data
-        // so we don't have to fetch to the API again.
-        if(!result.error) {
-            this.agent.setContext({
-                name: this.contextName,
-                lifespan: '5',
-                parameters: result,
-            });
-        }
     
         return result;
     }

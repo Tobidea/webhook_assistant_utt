@@ -13,7 +13,7 @@ class PrivateUserInfoSchedule extends Fetcher {
         this.contextName = 'private-user-info-schedule'; // Name of the context it generates after fetching succesfully data
     }
 
-    async rawFetchData() {
+    async fetchCallback() {
         let counter = 0;
 
         const schedule = await fetch('http://assistantutt.ga:8080/api/users/private/schedule', {
@@ -52,12 +52,6 @@ class PrivateUserInfoSchedule extends Fetcher {
                 // This is to convert day into an integer
                 course.dayId = days[course.day][0];
                 course.dayFr = days[course.day][1];
-            });
-            
-            this.agent.setContext({
-                name: this.contextName,
-                lifespan: '5',
-                parameters: result,
             });
 
             return result;

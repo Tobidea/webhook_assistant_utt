@@ -8,7 +8,7 @@ module.exports = async function handleUserPrivateScheduleNext(agent) {
         if (!userSchedule.isAuthenticatedNextEvent()) return;
 
         const currentCourse = userSchedule.getNow();
-        if(currentCourse) {
+        if (currentCourse) {
             agent.add(`Tu devrais être actuellement en ${currentCourse.uv} en ${currentCourse.room} !`);
         }
 
