@@ -23,8 +23,8 @@ module.exports = async function handleUserAuthenticate(agent) {
         }
     }
 
-    const button = new Payload(agent.FACEBOOK, {});
-    button.setPayload(fbPayload);
+    const button = new Payload(agent.FACEBOOK, fbPayload);
+
     agent.add(`Pour vous authentifier, cliquez sur le lien suivant :`);
     agent.add(`http://assistantutt.ga:8080/api/auth?sender_id=${agent.senderId}`);
     agent.add(button);
