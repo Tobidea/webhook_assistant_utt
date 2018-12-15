@@ -3,23 +3,21 @@ const UEFetcher = require('../../classes/UEFetcher');
 
 
 module.exports = async function handleAboutUE(agent) {
-    console.log(`${agent.intent} called with parameters : ${JSON.stringify(agent.parameters)}`)
+    console.log(`${agent.intent} called with parameters : ${JSON.stringify(agent.parameters)} and contexts ${JSON.stringify(agent.contexts)}`)
+
     const { codeUE } = agent.parameters;
 
     try {
-
         if (codeUE) {
+            
             const ueInfo = new UEFetcher(agent);
-            await ueInfo.fetchData(codeUE);
-
-            const ue = ueInfo.data;
-
-            console.log(ue);
+            const ue = await ueInfo.fetchData(codeUE) ;
             
             agent.add(`${ue.code} : ${ue.titre}`);
             agent.add(`C'est une ${ue.categorie} qui donne ${ue.credits} crédits ECTS. ${ue.semestre? `Cette UE est disponible en ${ue.semestre}`:''}`);
-            agent.add(new Suggestion ('Objectifs de l\'UE'));
-            agent.add(new Suggestion ('Programme de l\'UE'));
+            agent.add(new Suggestion (`Objectifs de l'UE`));
+            agent.add(new Suggestion (`Programme de l'UE`));
+
         } else {
             agent.add('Quelle UE?');
         }

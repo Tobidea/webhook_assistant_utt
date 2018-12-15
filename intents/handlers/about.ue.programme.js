@@ -1,28 +1,34 @@
-const fetchOneUE = require('../../helpers/fetchOneUE');
+const UEFetcher = require('../../classes/UEFetcher');
 
 module.exports = async function handleAboutUEprogramme(agent) {
-  console.log(`${agent.intent} called with parameters : ${JSON.stringify(agent.parameters)} and contexts ${JSON.stringify(agent.contexts)}`)
+    console.log(`${agent.intent} called with parameters : ${JSON.stringify(agent.parameters)} and contexts ${JSON.stringify(agent.contexts)}`)
+    
+    const {codeUE} = agent.parameters;
+    
+    try {
 
-  const ueContext = agent.getContext('context-ue');
+        let ue;
 
-  // There is 2 cases : If user had prompted a UE before, you will have a
-  // context and know which UE's objectif user wants. We won't need to fetch to
-  // the API again because the UE will be stored in the context object.
-  if (agent.parameters.codeUE) {
-    return await fetchOneUE(agent.parameters.codeUE)
-      .then((ue) => {
-        let programmeStr = ue.programme.join('\n- ');
-        programmeStr = `- ${programmeStr}`;
+        if (codeUE) {
+            const ueInfo = new UEFetcher(agent);
+            ue = await ueInfo.fetchData(codeUE);
+        } else if (agent.getContext('ue-info')) {
+            /**
+             * When user does not specify any codeUE in his request, it finds
+             * the result for the UE in context.
+             */
+            ue = agent.getContext('ue-info').parameters;
+        } else {
+            return agent.add('Programme de quelle UE...? 🤔');
+        }
 
+        const programmeStr = '- ' + ue.programme.join('\n- ');
+            
         agent.add(`Voici le programme de ${ue.code} :`);
         agent.add(programmeStr);
-      });
-  } else if (ueContext) {
-    let programmeStr = ueContext.parameters.ue.objectif.join('\n- ');
-    programmeStr = `- ${programmeStr}`; // Just to add the "-" to the first element.
 
-    return agent.add(programmeStr);
-  } else {
-    return agent.add('Programme de quelle UE...? 🤔');
-  }
+    } catch (err) {
+        console.log(err);
+        return agent.add(`J'ai eu un problème en recherchant le programme de l'UE..`)
+    }
 }

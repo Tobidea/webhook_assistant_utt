@@ -22,7 +22,11 @@ class Fetcher {
      * Fetch data and assign it (and checks if data exists in context)
      */
     async fetchData(parameters) {
-        const result = await this.existsInContext(this.fetchCallback.bind(this), parameters);
+        const result = await this.existsInContext({
+            parameters,
+            callback: this.fetchCallback.bind(this),
+            contextCheckerCallback: this.contextCheckerCallback.bind(this),
+        });
 
         // We set a context in which we put results of fetched data
         // so we don't have to fetch to the API again.
@@ -33,7 +37,7 @@ class Fetcher {
                 parameters: result,
             });
         }
-
+        
         this.data = result;
         return result;
     }
@@ -46,31 +50,35 @@ class Fetcher {
         throw new Error('fetchCallback() method should be redefined in subclasses.')
     }
 
+    /**
+     * Optional method to be redefined in its subclasses.
+     * Represents the condition to make a new API call or just use
+     * context as the result of fetching.
+     * @return A boolean
+     */
+    contextCheckerCallback(context) {
+        return context;
+    }
+
     /** 
      * This function avoids fetching to API multiple time if something we need
-     * to fetch has already been put in context of the session. 
-     * @param {function()} callback Callback executed if context is empty.
-     * @param {*} parameters Any argument called with the callback function.
+     * to fetch has already been put in context of the session.
+     * @param {Object} args
+     * @param {function(*)} args.callback Callback executed if context is empty.
+     * @param {*} args.parameters Any argument called with the callback function.
+     * @param {function(*)} args.contextCheckerCallback Callback returning a
      */
-    async existsInContext(callback, parameters) {
+    async existsInContext({callback, parameters, contextCheckerCallback = (context) => context}) {
         const context = this.agent.getContext(this.contextName);
 
-        /**
-         * TO DO :
-         * La condition que le contexte existe ne suffit pas, il faut également
-         * vérifier dans certains cas son contenu pour vérifier qu'il correspond
-         * réellement à l'information que l'on souhaite récuperer.
-         * On peut penser par exemple pour une UE donnée, le contexte pourrait exister
-         * mais le contenu de ce contexte pourrait ne pas correspondre à l'UE recherchée.
-         */
-        if (context) {
-                console.log(`${this.contextName} context already exists, no external fetch required.`);
-                this._hasLoaded = true;
-                return context.parameters;
+        if (contextCheckerCallback(context, parameters)) {
+            console.log(`${this.contextName} context already exists, no external API fetch required.`);
+            this._hasLoaded = true;
+            return context.parameters;
         } else {
-                const result = await callback(parameters);
-                if (!result.error) this._hasLoaded = true;
-                return result;
+            const result = await callback(parameters);
+            if (!result.error) this._hasLoaded = true;
+            return result;
         }
      }
 

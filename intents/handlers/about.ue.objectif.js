@@ -1,27 +1,34 @@
 const fetchOneUE = require('../../helpers/fetchOneUE');
+const UEFetcher = require('../../classes/UEFetcher');
 
 module.exports = async function handleAboutUEobjectif(agent) {
-  console.log(`${agent.intent} called with parameters : ${JSON.stringify(agent.parameters)} and contexts ${JSON.stringify(agent.contexts)}`)
+    console.log(`${agent.intent} called with parameters : ${JSON.stringify(agent.parameters)} and contexts ${JSON.stringify(agent.contexts)}`)
+    
+    const {codeUE} = agent.parameters;
+    
+    try {
+        let ue;
 
-  const ueContext = agent.getContext('context-ue');
+        if (codeUE) {
+            const ueInfo = new UEFetcher(agent);
+            ue = await ueInfo.fetchData(codeUE);
+        } else if (agent.getContext('ue-info')) {
+            /**
+             * When user does not specify any codeUE in his request, it finds
+             * the result for the UE in context.
+             */
+            ue = agent.getContext('ue-info').parameters;
+        } else {
+            return agent.add('Je sais pas de quelle UE tu parles.. 🤔');
+        }
 
-  // There is 2 cases : If user had prompted a UE before, you will have a
-  // context and know which UE's objectif user wants. We won't need to fetch to
-  // the API again because the UE will be stored in the context object.
-  if (agent.parameters.codeUE) {
-    return await fetchOneUE(agent.parameters.codeUE)
-      .then((ue) => {
-        let objectifStr = ue.objectif.join('\n- ');
-        objectifStr = `- ${objectifStr}`;
-
-        agent.add(`Voici les objectifs de ${ue.code} :`);
+        const objectifStr = '- ' + ue.objectif.join('\n- ');
+            
+        agent.add(`Voici le programme de ${ue.code} :`);
         agent.add(objectifStr);
-      });
-  } else if (ueContext) {
-    const objectifStr = '- ' + ueContext.parameters.ue.objectif.join('\n- ');
 
-    return agent.add(objectifStr);
-  } else {
-    return agent.add('Objectifs de quelle UE...? 🤔');
-  }
+    } catch (err) {
+        console.log(err);
+        return agent.add(`J'ai eu un problème en recherchant les objectifs de l'UE..`)
+    }
 }

@@ -1,31 +1,42 @@
-const fetchOneUE = require('../../helpers/fetchOneUE');
+const UEFetcher = require('../../classes/UEFetcher');
 
 module.exports = async function handleAboutUEsemestre(agent) {
-  console.log(`${agent.intent} called with parameters : ${JSON.stringify(agent.parameters)} and contexts ${JSON.stringify(agent.contexts)}`)
+    console.log(`${agent.intent} called with parameters : ${JSON.stringify(agent.parameters)} and contexts ${JSON.stringify(agent.contexts)}`)
+    
+    const {codeUE} = agent.parameters;
+    
+    try {
+        let ue;
 
-  const ueContext = agent.getContext('context-ue');
-  let ue = {};
-  // There is 2 cases : If user had prompted a UE before, you will have a
-  // context and know which UE's objectif user wants. We won't need to fetch to
-  // the API again because the UE will be stored in the context object.
-  if (agent.parameters.codeUE) {
-    ue = await fetchOneUE(agent.parameters.codeUE);
-  } else if (ueContext) {
-    ue = ueContext.parameters.ue;
-  } else {
-    return agent.add('Disponibilité?');
-  }
+        console.log(agent.getContext('ue-info'));
+        if (codeUE) {
+            const ueInfo = new UEFetcher(agent);
+            ue = await ueInfo.fetchData(codeUE);
+        } else if (agent.getContext('ue-info')) {
+            /**
+             * When user does not specify any codeUE in his request, it finds
+             * the result for the UE in context.
+             */
+            ue = agent.getContext('ue-info').parameters;
 
-  // There is an issue with some UE because there is no semester field.
-  if (ue.semestre) {
-    console.log(JSON.stringify(ue));
-    const semestres = ue.semestre.split(' / ');
-    console.log(semestres);
-    const response = semestres.length === 2? `${semestres[0]} et ${semestres[1]}`:`${semestres[0]}`;
+            console.log(ue);
+        } else {
+            return agent.add('De quelle UE tu parles ? 🤔');
+        }
 
-    return agent.add(`${ue.code} est disponible en ${response}`);
-  } else {
-    return agent.add(`Désolé, je n'ai pas pu trouver cette information...`);
-  }
+        if (ue.semestre) {
+            console.log(JSON.stringify(ue));
+            const semestres = ue.semestre.split(' / ');
+            console.log(semestres);
+            const response = semestres.length === 2? `${semestres[0]} et ${semestres[1]}`:`${semestres[0]}`;
+            
+            return agent.add(`${ue.code} est disponible en ${response}`);
+        } else {
+            return agent.add(`Sorry, je possède pas cette information :/`);
+        }
 
+    } catch (err) {
+        console.log(err);
+        return agent.add(`J'ai eu un problème en recherchant le programme de l'UE..`)
+    }
 }
