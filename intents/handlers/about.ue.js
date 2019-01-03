@@ -17,7 +17,7 @@ module.exports = async function handleAboutUE(agent) {
             agent.add(`C'est une ${ue.categorie} qui donne ${ue.credits} crédits ECTS. ${ue.semestre? `Cette UE est disponible en ${ue.semestre}`:''}`);
 
             const suggestions = new Payload(agent.FACEBOOK, {
-                text: '',
+                text: 'a',
                 quick_replies: [`Objectifs de l'UE`, `Programme de l'UE`]
                 .map(option => {
                     return {
