@@ -64,9 +64,9 @@ class Fetcher {
      * This function avoids fetching to API multiple time if something we need
      * to fetch has already been put in context of the session.
      * @param {Object} args
-     * @param {function(*)} args.callback Callback executed if context is empty.
+     * @param {function(*): Object} args.callback Callback executed if context is empty.
      * @param {*} args.parameters Any argument called with the callback function.
-     * @param {function(*)} args.contextCheckerCallback Callback returning a
+     * @param {function(*): boolean} [args.contextCheckerCallback] Callback returning a boolean. Used to check specific conditions
      */
     async existsInContext({callback, parameters, contextCheckerCallback = (context) => context}) {
         const context = this.agent.getContext(this.contextName);
@@ -114,7 +114,7 @@ class Fetcher {
      */
     hasLoadedCheck() {
         if (!this.hasLoaded) {
-            throw new Error('Tried to access data but it is not loaded.');
+            throw new Error('Tried to access data but it has not loaded.');
         }
     }
 

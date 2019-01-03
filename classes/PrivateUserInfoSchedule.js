@@ -1,6 +1,7 @@
 const fetch = require('node-fetch');
 const Fetcher = require('./Fetcher');
-const moment = require('moment-timezone');
+const getNowMinutes = require('../helpers/time/getNowMinutes');
+const convertToMinutesPassed = require('../helpers/time/convertToMinutesPassed');
 
 /**
  * This class represents a user schedule.
@@ -22,39 +23,11 @@ class PrivateUserInfoSchedule extends Fetcher {
                 'Sender-Id': this.agent.senderId,
             },
         })  .then(schedule => schedule.json());
-
-        // This is to wrap the schedule array in an object 'schedule'
         
-        // We set a context in which we put results of fetched data
-        // so we don't have to fetch to the API again.
+    
+        // On fait ça pour wrapper schedule dans l'attribut data
         if(!schedule.error) {
-            const result = { schedule };
-
-            const days = {
-                sunday: [0, 'Dimanche'],
-                monday: [1, 'Lundi'],
-                tuesday: [2, 'Mardi'],
-                wednesday: [3, 'Mercredi'],
-                thursday: [4, 'Jeudi'],
-                friday: [5, 'Vendredi'],
-                saturday: [6, 'Samedi'], 
-            };
-
-            result.schedule.forEach((course) => {
-                // We are adding ID to every course so we can find them easier
-                course.id = counter;
-                counter += 1;
-
-                // This number is to compare times easier
-                course.start.real = course.start.hour + course.start.minute / 60;
-                course.end.real = course.end.hour + course.end.minute / 60;
-
-                // This is to convert day into an integer
-                course.dayId = days[course.day][0];
-                course.dayFr = days[course.day][1];
-            });
-
-            return result;
+            return this._enhanceSchedule(schedule);
         }
     
         // LES RETURN A CHANGER C'EST MOCHE 
@@ -62,60 +35,113 @@ class PrivateUserInfoSchedule extends Fetcher {
     }
 
     /**
-     * Match course with a given time (Date object)
-     * @param {Date} date 
+     * 
      */
-    match(date) {
-        this.hasLoadedCheck();
+    _enhanceSchedule(schedule) {
+        const result = { schedule };
 
-        // Convert time (hours and minutes) to a single real number
-        // so we can compare time easily.
-        const time = date.getHours() + date.getMinutes() / 60;
-   
-        const matchedCourse = this.data.schedule.find(course => (
-            course.dayId === date.getDay() &&
-            course.start.real   <= time &&
-            course.end.real     >= time
-        ));
+        const days = {
+            sunday: [0, 'Dimanche'],
+            monday: [1, 'Lundi'],
+            tuesday: [2, 'Mardi'],
+            wednesday: [3, 'Mercredi'],
+            thursday: [4, 'Jeudi'],
+            friday: [5, 'Vendredi'],
+            saturday: [6, 'Samedi'], 
+        };
 
-        return matchedCourse;
+        let counter = 0;
+
+        result.schedule.forEach((course) => {
+            
+            // We are adding ID to every course so we can find them easier
+            course.id = counter;
+            counter += 1;
+
+            // Adding day as an integer
+            course.dayId = days[course.day][0];
+
+            // Adding french day name
+            course.dayFr = days[course.day][1];
+
+            course.start.minutesPassed = convertToMinutesPassed({
+                hour: course.start.hour,
+                minute: course.start.minute,
+                day : course.dayId,
+            })
+            
+            course.end.minutesPassed = convertToMinutesPassed({
+                hour: course.end.hour,
+                minute: course.end.minute,
+                day : course.dayId,
+            })
+
+        });
+
+        return result;
     }
 
     /**
-     * Match the closest (next) course to date
-     * @param {Date} date
+     * Match course at the given time (Date object or minutes)
+     * If no parameters, matches next course for current time.
+     * If there is no match, it returns 'undefined'.
+     * @param {Date|Number} [date] Date or minutes (integer) passed since monday
+     * @return {Object} A course object
      */
-    matchNext(date) {
+    match(date = getNowMinutes()) {
         this.hasLoadedCheck();
 
-        const time = date.getHours() + date.getMinutes() / 60;
-    
-        let matchedCourse = this.data.schedule.find(course => (
-            course.dayId >= date.getDay() &&
-            course.start.real > time
-        ));
+        let time;
 
-        if (!matchedCourse) {
-            matchedCourse = this.data.schedule[0];
+        // Arguments validation
+        if (date instanceof Date) {
+            time = convertToMinutesPassed(date);
+        } else if (typeof date === 'number'){
+            time = date;
+        } else {
+            throw new Error('Argument of match() must be either Date or Number.')
         }
         
+        const matchedCourse = this.data.schedule.find(course => {        
+            return (course.start.minutesPassed <= time &&
+                    course.end.minutesPassed >= time);
+        })
+
         return matchedCourse;
     }
 
     /**
-     * Returns matched course for current time
+     * Match the closest (next) course to Date specified in parameter
+     * If no parameters, matches next course for current time.
+     * @param {Date|Number} [date] Date or minutes (integer) passed since monday
+     * @return {Object} A course object
      */
-    getNow() {
-        return this.match(new Date());
-    }
+    matchNext(date = getNowMinutes()) {
+        this.hasLoadedCheck();
 
-    /**
-     * Returns next course for current time
-     */
-    getNext() {        
-        return this.matchNext(new Date());
-    }
+        let time;
 
+        // Arguments validation
+        if (date instanceof Date) {
+            time = convertToMinutesPassed(date);
+        } else if (typeof date === 'number'){
+            time = date;
+        } else {
+            throw new Error('Argument of matchNext() must be either Date or Number.')
+        }
+
+        let nextCourse = this.data.schedule.find((course) => {
+            return course.start.minutesPassed >= time;
+        })
+
+        // If it doesn't match anything, that must be because we are at the end of the week
+        // So we assign nextCourse to first course of the week.
+        if (!nextCourse) {
+            nextCourse = this.data.schedule[0];
+        }
+        
+        return nextCourse;
+    }
 
     addRelativeDay(currentDay, day) {   
         const difference = day - currentDay;

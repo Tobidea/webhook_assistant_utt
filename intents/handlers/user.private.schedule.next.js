@@ -1,4 +1,5 @@
 const PrivateUserInfoSchedule = require('../../classes/PrivateUserInfoSchedule');
+const getRelativeDay = require('../../helpers/time/getRelativeDay');
 
 module.exports = async function handleUserPrivateScheduleNext(agent) {
     console.log(`${agent.intent} called with parameters : ${JSON.stringify(agent.parameters)} and contexts ${JSON.stringify(agent.contexts)}`)
@@ -7,17 +8,19 @@ module.exports = async function handleUserPrivateScheduleNext(agent) {
         await userSchedule.fetchData();
         if (!userSchedule.isAuthenticatedNextEvent()) return;
 
-        const currentCourse = userSchedule.getNow();
+        const currentCourse = userSchedule.match();
         if (currentCourse) {
             agent.add(`Tu devrais être actuellement en ${currentCourse.uv} en ${currentCourse.room} !`);
         }
 
-        const nextCourse = userSchedule.getNext();
+        const nextCourse = userSchedule.matchNext();
 
-        agent.add(`Ton prochain cours c'est ${nextCourse.uv} \
-à ${nextCourse.start.hour}h${nextCourse.start.minute? nextCourse.start.minute:''} \
+        const type = nextCourse.type;
+        const relativeDay = getRelativeDay(new Date(), nextCourse);
+
+        return agent.add(`Tu as un ${type} de ${nextCourse.uv} \
+${relativeDay} à ${nextCourse.start.hour}h${nextCourse.start.minute? nextCourse.start.minute:''} \
 en ${nextCourse.room} ! `)
-        // return agent.add(`Tu commences lundi à ${userSchedule.data.schedule[0].start.hour}h avec ${userSchedule.data.schedule[0].uv} en ${userSchedule.data.schedule[0].room}`);
 
     } catch (err) {
         console.log(err);

@@ -6,7 +6,6 @@ module.exports = async function handleAboutUEprogramme(agent) {
     const {codeUE} = agent.parameters;
     
     try {
-
         let ue;
 
         if (codeUE) {

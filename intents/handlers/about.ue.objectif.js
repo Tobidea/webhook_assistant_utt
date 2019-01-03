@@ -1,4 +1,3 @@
-const fetchOneUE = require('../../helpers/fetchOneUE');
 const UEFetcher = require('../../classes/UEFetcher');
 
 module.exports = async function handleAboutUEobjectif(agent) {
@@ -23,7 +22,7 @@ module.exports = async function handleAboutUEobjectif(agent) {
         }
 
         const objectifStr = '- ' + ue.objectif.join('\n- ');
-            
+    
         agent.add(`Voici les objectifs de ${ue.code} :`);
         agent.add(objectifStr);
 

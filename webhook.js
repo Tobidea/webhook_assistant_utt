@@ -16,4 +16,4 @@ app.post('/webhook', (req, res) => {
   agent.handleRequest(intents.intentMap);
 });
 
-app.listen(PORT, () => console.log(`Ecoute du webhook sur le port ${PORT}.`));
+app.listen(PORT, () => console.log(`Webhook listening at port ${PORT}.`));

@@ -1,8 +1,3 @@
-/**
- * 
- */
-
- 
  /**
   * This function avoids fetching to API multiple time if something we need
   * to fetch has already been put in context of the session.
