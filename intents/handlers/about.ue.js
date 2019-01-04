@@ -1,5 +1,6 @@
 const { Suggestion, Payload } = require('dialogflow-fulfillment');
 const UEFetcher = require('../../classes/UEFetcher');
+const fbSuggestions = require('../../payloads/facebook/suggestions');
 
 
 module.exports = async function handleAboutUE(agent) {
@@ -14,21 +15,12 @@ module.exports = async function handleAboutUE(agent) {
             const ue = await ueInfo.fetchData(codeUE) ;
             
             agent.add(`${ue.code} : ${ue.titre}`);
-            agent.add(`C'est une ${ue.categorie} qui donne ${ue.credits} crédits ECTS. ${ue.semestre? `Cette UE est disponible en ${ue.semestre}`:''}`);
 
-            const suggestions = new Payload(agent.FACEBOOK, {
-                text: `Besoin d'autre chose?`,
-                quick_replies: [`Objectifs de l'UE`, `Programme de l'UE`]
-                .map(option => {
-                    return {
-                        content_type: 'text',
-                        title: option,
-                        payload: option
-                    }
-                })
-            }, {sendAsMessage: true});
+            const lastMessage = `C'est une ${ue.categorie} qui donne ${ue.credits} crédits ECTS. ${ue.semestre? `Cette UE est disponible en ${ue.semestre}`:''}`
 
-            agent.add(suggestions);
+            const messageSuggestions = fbSuggestions(lastMessage, [`Objectifs de l'UE`, `Programme de l'UE`])
+
+            agent.add(messageSuggestions);
             
             // agent.add(new Suggestion (`Objectifs de l'UE`));
             // agent.add(new Suggestion (`Programme de l'UE`));
