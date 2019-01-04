@@ -19,11 +19,9 @@ module.exports = async function handleUserAuthenticate(agent) {
         }
     }
 
-    const fbButton = new Payload(agent.FACEBOOK, fbPayloadOptions, {
-        sendAsMessage: true,
-    });
+    const fbButton = new Payload(agent.FACEBOOK, fbPayloadOptions);
 
-    agent.add(`Pour t'authentifier, allez sur le lien suivant :`);
+    agent.add(`Pour t'authentifier via le CAS, connecte toi dans le lien suivant :`);
     agent.add(`http://assistantutt.ga:8080/api/auth?sender_id=${agent.senderId}`);
     agent.add(fbButton);
 
