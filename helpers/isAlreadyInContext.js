@@ -8,7 +8,7 @@
   */
  module.exports = async function isAlreadyInContext({ agent, contextName, callback }) {
     try {
-        const context = agent.getContext(contextName);
+        const context = agent.context.get(contextName);
 
         console.log(JSON.stringify(context));
 

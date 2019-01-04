@@ -11,12 +11,12 @@ module.exports = async function handleAboutUEobjectif(agent) {
         if (codeUE) {
             const ueInfo = new UEFetcher(agent);
             ue = await ueInfo.fetchData(codeUE);
-        } else if (agent.getContext('ue-info')) {
+        } else if (agent.context.get('ue-info')) {
             /**
              * When user does not specify any codeUE in his request, it finds
              * the result for the UE in context.
              */
-            ue = agent.getContext('ue-info').parameters;
+            ue = agent.context.get('ue-info').parameters;
         } else {
             return agent.add('Je sais pas de quelle UE tu parles.. 🤔');
         }

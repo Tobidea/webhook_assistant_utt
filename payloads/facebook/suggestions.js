@@ -7,7 +7,7 @@ const { Payload } = require('dialogflow-fulfillment');
  * @param {Boolean} [sendAsMessage] sendAsMessage boolean option in the payload constructor. True by default.
  */
 function textSuggestions(text, options, sendAsMessage = true) {
-    const payload = new Payload(agent.FACEBOOK, {
+    const payload = new Payload('FACEBOOK', {
         text,
         quick_replies: options
         .slice(0,5)

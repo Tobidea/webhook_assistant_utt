@@ -6,7 +6,7 @@
  */
 function createApiSenderId(agent) {
     // If message is sent from facebook or not.
-    const fbSenderId = agent.getContext('generic')? agent.getContext('generic').parameters.facebook_sender_id + '--':'';
+    const fbSenderId = agent.context.get('generic')? agent.context.get('generic').parameters.facebook_sender_id + '--':'';
 
     const fullSessionName = agent.session.split('/');
     const sessionId = fullSessionName[fullSessionName.length - 1];

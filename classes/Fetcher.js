@@ -31,7 +31,7 @@ class Fetcher {
         // We set a context in which we put results of fetched data
         // so we don't have to fetch to the API again.
         if(!result.error) {
-            this.agent.setContext({
+            this.agent.context.set({
                 name: this.contextName,
                 lifespan: '5',
                 parameters: result,
@@ -69,7 +69,7 @@ class Fetcher {
      * @param {function(*): boolean} [args.contextCheckerCallback] Callback returning a boolean. Used to check specific conditions
      */
     async existsInContext({callback, parameters, contextCheckerCallback = (context) => context}) {
-        const context = this.agent.getContext(this.contextName);
+        const context = this.agent.context.get(this.contextName);
 
         if (contextCheckerCallback(context, parameters)) {
             console.log(`${this.contextName} context already exists, no external API fetch required.`);
