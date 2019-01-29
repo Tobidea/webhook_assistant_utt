@@ -1,3 +1,8 @@
+/**
+ * This file is used to load every intents handlers from ./handlers
+ * It handles intent corresponding to the fila name : <intent_name_handled>.js
+ */
+
 const path = require('path');
 const fs = require('fs');
 

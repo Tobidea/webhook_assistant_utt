@@ -13,7 +13,8 @@ module.exports = async function handleUserAuthenticate(agent) {
                     "type":"web_url",
                     "url":`http://assistantutt.ga:8080/api/auth?sender_id=${agent.senderId}`,
                     "title":"S'authentifier",
-                    "webview_height_ratio": "full"
+                    "webview_height_ratio": "tall",
+                    "messenger_extensions": "false",
                 }]
             }
         }
